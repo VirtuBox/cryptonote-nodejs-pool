@@ -30,8 +30,7 @@ if (cluster.isWorker){
             break;
         case 'chartsDataCollector':
             require('./lib/chartsDataCollector.js');
-            break
-
+            break;
     }
     return;
 }
