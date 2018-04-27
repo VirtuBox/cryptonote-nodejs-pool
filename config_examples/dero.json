@@ -151,7 +151,7 @@
     "email": {
         "enabled": false,
         "templateDir": "email_templates",
-        "templates": ["worker_connected", "worker_banned", "worker_timeout", "email_added", "block_found", "payment"],
+        "disableTemplates": [],
         "variables": {
             "POOL_HOST": "poolhost.com"
         },
@@ -174,7 +174,13 @@
             "domain": "mg.yourdomain"
         }
     },
-    
+
+    "telegram": {
+        "enabled": false,
+        "token": "",
+        "channel": ""
+    },
+
     "monitoring": {
         "daemon": {
             "checkInterval": 60,

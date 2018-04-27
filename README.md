@@ -86,6 +86,7 @@ Features
 * Onishin's [keepalive function](https://github.com/perl5577/cpuminer-multi/commit/0c8aedb)
 * Support for slush mining system (disabled by default)
 * E-Mail Notifications on worker connected, disconnected (timeout) or banned (support MailGun, SMTP and Sendmail)
+* Telegram channel notifications when a block is unlocked
 * Top 10 miners report
 * Multilingual: We support translation of the visual user interface
 
@@ -171,7 +172,7 @@ Explanation for each field:
 /* Coin network time to mine one block, see DIFFICULTY_TARGET constant in DAEMON_CODE/src/cryptonote_config.h */
 "coinDifficultyTarget": 120,
 
-/* Set Cryptonight algorithm. Accepted values: cryptonight (default), cryptonight_lite and cryptonight_heavy */
+/* Set Cryptonight algorithm. Accepted values: cryptonight (default), cryptonight_light and cryptonight_heavy */
 "cnAlgorithm": "cryptonight",
 
 /* Set Cryptonight variant. Set 0 for original Cryptonight algorithm and 1 for Cryptonight v1 / Monero v7 algorithm. If empty will use automatic detection. Set -1 to disable. */
@@ -376,7 +377,7 @@ Explanation for each field:
 "email": {
     "enabled": false,
     "templateDir": "email_templates", // The templates folder
-    "templates": ["worker_connected", "worker_banned", "worker_timeout", "email_added", "block_found", "payment"], // Specify which templates to enable
+    "disableTemplates": ["template_to_disable_1", "template_to_disable_2", "etc"], // Specify which templates you want to disable
     "variables": { // The variables to replace in templates
         "POOL_HOST": "poolhost.com" // Your pool domain
     },
@@ -407,7 +408,15 @@ Explanation for each field:
         "domain": "mg.yourdomain" // Your MailGun domain
     }
 },
-    
+
+/* Telegram channel notifications. Currently only send notifications when a block is unlocked.
+   See Telegram documentation to setup your bot: https://core.telegram.org/bots#3-how-do-i-create-a-bot */
+"telegram": {
+    "enabled": false,
+    "token": "", // The bot unique authorization token
+    "channel": "" // The telegram channel id (ex: BlockHashMining)
+},
+
 /* Monitoring RPC services. Statistics will be displayed in Admin panel */
 "monitoring": {
     "daemon": {
