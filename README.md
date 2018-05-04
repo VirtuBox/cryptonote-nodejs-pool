@@ -215,6 +215,9 @@ Explanation for each field:
     /* Address where block rewards go, and miner payments come from. */
     "poolAddress": "GBqRuitSoU3PFPBAkXMEnLdBRWXH4iDSD6RDxnQiEFjVJhWUi1UuqfV5EzosmaXgpPGE6JJQjMYhZZgWY8EJQn8jQTsuTit",
 
+    /* This is the integrated address prefix used for miner login validation. */
+    "intAddressPrefix": 91,
+
     /* Poll RPC daemons for new blocks every this many milliseconds. */
     "blockRefreshInterval": 1000,
 
@@ -399,6 +402,9 @@ Explanation for each field:
         "auth": {
             "user": "username", // SMTP username
             "pass": "password" // SMTP password
+        },
+        "tls": {
+            "rejectUnauthorized": false // Reject unauthorized TLS/SSL certificate
         }
     },
     
@@ -415,6 +421,10 @@ Explanation for each field:
     "enabled": false,
     "token": "", // The bot unique authorization token
     "channel": "", // The telegram channel id (ex: BlockHashMining)
+    "channelStats": {
+        "enabled": false, // Enable periodical updater of pool statistics in telegram channel
+        "interval": 5 // Periodical update interval (in minutes)
+    },
     "botCommands": { // Set the telegram bot commands
         "stats": "/stats", // Pool statistics
          "enable": "/enable", // Enable telegram notifications

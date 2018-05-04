@@ -22,6 +22,7 @@
         "enabled": true,
         "clusterForks": "auto",
         "poolAddress": "** Your pool wallet address **",
+        "intAddressPrefix": 19,
         "blockRefreshInterval": 1000,
         "minerTimeout": 900,
         "sslCert": "./cert.pem",
@@ -170,22 +171,22 @@
         },
         "emailMessage": {
             "emailAdded": "Your email has been registered to receive pool notifications.",
-            "workerConnected": "Your worker %WORKER_NAME% is now connected.",
-            "workerTimeout": "Your worker %WORKER_NAME% has stopped submitting hashes on %LAST_HASH%.",
-            "workerBanned": "Your worker %WORKER_NAME% has been banned.",
+            "workerConnected": "Your worker %WORKER_NAME% for address %MINER% is now connected from ip %IP%.",
+            "workerTimeout": "Your worker %WORKER_NAME% for address %MINER% has stopped submitting hashes on %LAST_HASH%.",
+            "workerBanned": "Your worker %WORKER_NAME% for address %MINER% has been banned.",
             "blockFound": "Block found at height %HEIGHT% by miner %MINER% on %TIME%. Waiting maturity.",
             "blockUnlocked": "Block mined at %HEIGHT% with %REWARD% and %EFFORT% effort on %TIME%.",
             "blockOrphaned": "Block orphaned at height %HEIGHT% :(",
             "payment": "A payment of %AMOUNT% has been sent to %ADDRESS% wallet."
         },
         "telegramMessage": {
-            "workerConnected": "Your worker %WORKER_NAME% is now connected.",
-            "workerTimeout": "Your worker %WORKER_NAME% has stopped submitting hashes on %LAST_HASH%.",
-            "workerBanned": "Your worker %WORKER_NAME% has been banned.",
-            "blockFound": "Block found at height %HEIGHT% by miner %MINER%. Waiting maturity.",
-            "blockUnlocked": "Block mined at %HEIGHT% with %REWARD% and %EFFORT% effort on %TIME%.",
-            "blockOrphaned": "Block orphaned at height %HEIGHT% :(",
-            "payment": "A payment of %AMOUNT% has been sent."
+            "workerConnected": "Your worker _%WORKER_NAME%_ for address _%MINER%_ is now connected from ip _%IP%_.",
+            "workerTimeout": "Your worker _%WORKER_NAME%_ for address _%MINER%_ has stopped submitting hashes on _%LAST_HASH%_.",
+            "workerBanned": "Your worker _%WORKER_NAME%_ for address _%MINER%_ has been banned.",
+            "blockFound": "*Block found at height _%HEIGHT%_ by miner _%MINER%_. Waiting maturity.*",
+            "blockUnlocked": "*Block mined at _%HEIGHT%_ with _%REWARD%_ and _%EFFORT%_ effort on _%TIME%_.*",
+            "blockOrphaned": "*Block orphaned at height _%HEIGHT%_ :(*",
+            "payment": "A payment of _%AMOUNT%_ has been sent."
         }
     },
 
@@ -203,6 +204,9 @@
             "auth": {
                 "user": "username",
                 "pass": "password"
+            },
+            "tls": {
+                "rejectUnauthorized": false
             }
         },
         "mailgun": {
@@ -215,6 +219,10 @@
         "enabled": false,
         "token": "",
         "channel": "",
+        "channelStats": {
+            "enabled": false,
+            "interval": 30
+        },
         "botCommands": {
             "stats": "/stats",
             "enable": "/enable",
