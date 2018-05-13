@@ -208,9 +208,17 @@ function getReadableHashRateString(hashrate){
     return hashrate.toFixed(2) + byteUnits[i];
 }
     
+// Get coin decimal places
+function getCoinDecimalPlaces() {
+    if (typeof coinDecimalPlaces != "undefined") return coinDecimalPlaces;
+    else if (lastStats.config.coinDecimalPlaces) return lastStats.config.coinDecimalPlaces;
+    else lastStats.config.coinUnits.toString().length - 1;
+}
+
 // Get readable coins
 function getReadableCoins(coins, digits, withoutSymbol){
-    var amount = (parseInt(coins || 0) / lastStats.config.coinUnits).toFixed(digits || lastStats.config.coinUnits.toString().length - 1);
+    var coinDecimalPlaces = getCoinDecimalPlaces();
+    var amount = (parseInt(coins || 0) / lastStats.config.coinUnits).toFixed(digits || coinDecimalPlaces);
     return amount + (withoutSymbol ? '' : (' ' + lastStats.config.symbol));
 }
 
@@ -262,6 +270,13 @@ function formatLuck(difficulty, shares) {
 /**
  * URLs
  **/
+
+// Return pool host
+function getPoolHost() {
+    if (typeof poolHost != "undefined") return poolHost;
+    if (lastStats.config.poolHost) return lastStats.config.poolHost;
+    else return window.location.hostname;
+}
 
 // Return transaction URL
 function getTransactionUrl(id) {

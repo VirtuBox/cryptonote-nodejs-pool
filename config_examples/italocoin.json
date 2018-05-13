@@ -1,11 +1,11 @@
 {
     "poolHost": "your.pool.host",
 
-    "coin": "graft",
-    "symbol": "GRFT",
-    "coinUnits": 10000000000,
+    "coin": "italoCoin",
+    "symbol": "ITA",
+    "coinUnits": 1000000000000,
     "coinDecimalPlaces": 4,
-    "coinDifficultyTarget": 120,
+    "coinDifficultyTarget": 180,
 
     "cnAlgorithm": "cryptonight",
     "cnVariant": 1,
@@ -27,7 +27,7 @@
         "enabled": true,
         "clusterForks": "auto",
         "poolAddress": "** Your pool wallet address **",
-        "intAddressPrefix": 91,
+        "intAddressPrefix": 251,
         "blockRefreshInterval": 1000,
         "minerTimeout": 900,
         "sslCert": "./cert.pem",
@@ -109,12 +109,12 @@
         "maxAddresses": 50,
         "mixin": 5,
         "priority": 0,
-        "transferFee": 4000000000,
+        "transferFee": 20000000,
         "dynamicTransferFee": true,
         "minerPayFee" : true,
-        "minPayment": 100000000000,
+        "minPayment": 1000000000000,
         "maxTransactionAmount": 0,
-        "denomination": 1000000000
+        "denomination": 100000000000
     },
 
     "blockUnlocker": {
@@ -145,12 +145,12 @@
 
     "daemon": {
         "host": "127.0.0.1",
-        "port": 18981
+        "port": 13102
     },
 
     "wallet": {
         "host": "127.0.0.1",
-        "port": 18982
+        "port": 13103
     },
 
     "redis": {

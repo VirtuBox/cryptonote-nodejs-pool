@@ -1,8 +1,7 @@
 cryptonote-nodejs-pool
 ======================
 
-High performance Node.js (with native C addons) mining pool for CryptoNote based coins. Comes with lightweight example front-end script which uses the pool's AJAX API. Support for Original Cryptonight, Cryptonight v1 (Monero fork), Cryptonight Light (AEON) and Cryptonight Heavy (Sumokoin fork) algorithms.
-
+High performance Node.js (with native C addons) mining pool for CryptoNote based coins. Comes with lightweight example front-end script which uses the pool's AJAX API. Support for Cryptonight (Original, Monero v7, Stellite v7), Cryptonight Light (Original, Aeon v7, IPBC) and Cryptonight Heavy (Sumokoin) algorithms.
 
 
 #### Table of Contents
@@ -43,7 +42,7 @@ Features
 * Set fixed difficulty on miner client by passing "address" param with "+[difficulty]" postfix
 * Modular components for horizontal scaling (pool server, database, stats/API, payment processing, front-end)
 * SSL support for both pool and API servers
-* Support for Original Cryptonight, Cryptonight v1 (Monero fork), Cryptonight Light (AEON) and Cryptonight Heavy (Sumokoin fork) algorithms
+* Support for Cryptonight (Original, Monero v7, Stellite v7), Cryptonight Light (Original, Aeon v7, IPBC) and Cryptonight Heavy (Sumokoin) algorithms.
 
 #### Live statistics API
 * Currency network/block difficulty
@@ -88,35 +87,39 @@ Features
 * E-Mail Notifications on worker connected, disconnected (timeout) or banned (support MailGun, SMTP and Sendmail)
 * Telegram channel notifications when a block is unlocked
 * Top 10 miners report
-* Multilingual: We support translation of the visual user interface
+* Multilingual user interface
 
 
 Community / Support
 ===
 
-* [GitHub Issues for cryptonote-nodejs-pool](https://github.com/dvandal/cryptonote-nodejs-pool/issues)
-* [CryptoNote Technology](https://cryptonote.org)
-* [CryptoNote Forum](https://forum.cryptonote.org/)
+* [GitHub Wiki](https://github.com/dvandal/cryptonote-nodejs-pool/wiki)
+* [GitHub Issues](https://github.com/dvandal/cryptonote-nodejs-pool/issues)
 
 #### Pools Using This Software
 
 * https://graft.blockhashmining.com/
+* https://haven.blockhashmining.com/
+* https://loki.blockhashmining.com/
+* https://masari.blockhashmining.com/
+* https://stellite.blockhashmining.com/
 * https://graft.anypool.net/
 * https://graft.dark-mine.su/
+* http://itns.proxpool.com/
+* https://bytecoin.pt
+* http://ita.minexmr24.ru/
+* https://pool.croatpirineus.cat
 
 Usage
 ===
 
 #### Requirements
 * Coin daemon(s) (find the coin's repo and build latest version from source)
-  * [ByteCoin](https://github.com/amjuarez/bytecoin)
-  * [Monero](https://github.com/monero-project/bitmonero)
-  * [GRAFT](https://github.com/graft-project/GraftNetwork)
-  * [SUPERIORCOIN](https://github.com/TheSuperiorCoin/TheSuperiorCoin)
+  * [List of Cryptonote coins](https://github.com/dvandal/cryptonote-nodejs-pool/wiki/Cryptonote-Coins)
 * [Node.js](http://nodejs.org/) v4.0+
   * For Ubuntu: 
  ```
-  curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash
+  curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash
   sudo apt-get install -y nodejs
 ```
 * [Redis](http://redis.io/) key-value store v2.6+ 
@@ -129,7 +132,7 @@ sudo apt-get install redis-server
 * libssl required for the node-multi-hashing module
   * For Ubuntu: `sudo apt-get install libssl-dev`
 
-* Boost is required for the cryptonote-util module
+* Boost is required for the cryptoforknote-util module
   * For Ubuntu: `sudo apt-get install libboost-all-dev`
 
 
@@ -154,12 +157,13 @@ npm update
 
 #### 2) Configuration
 
-*Warning for Cryptonote coins other than Monero:* this software may or may not work with any given cryptonote coin. Be wary of altcoins that change the number of minimum coin units because you will have to reconfigure several config values to account for those changes. Unless you're offering a bounty reward - do not open an issue asking for help getting a coin other than Monero working with this software.
-
 Copy the `config_examples/COIN.json` file of your choice to `config.json` then overview each options and change any to match your preferred setup.
 
 Explanation for each field:
 ```javascript
+/* Pool host displayed in notifications and front-end */
+"poolHost": "your.pool.host",
+
 /* Used for storage in redis so multiple coins can share the same redis instance. */
 "coin": "graft",
 
@@ -169,14 +173,20 @@ Explanation for each field:
 /* Minimum units in a single coin, see COIN constant in DAEMON_CODE/src/cryptonote_config.h */
 "coinUnits": 10000000000,
 
+/* Number of coin decimals places for notifications and front-end */
+"coinDecimalPlaces": 4,
+  
 /* Coin network time to mine one block, see DIFFICULTY_TARGET constant in DAEMON_CODE/src/cryptonote_config.h */
 "coinDifficultyTarget": 120,
 
-/* Set Cryptonight algorithm. Accepted values: cryptonight (default), cryptonight_light and cryptonight_heavy */
+/* Set Cryptonight algorithm settings.
+   Supported algorithms: cryptonight (default). cryptonight_light and cryptonight_heavy
+   Supported variants for "cryptonight": 0 (Original), 1 (Monero v7), 3 (Stellite / XTL)
+   Supported variants for "cryptonight_light": 0 (Original), 1 (Aeon v7), 2 (IPBC)
+   Supported blob types: 0 (Cryptonote), 1 (Forknote v1), 2 (Forknote v2), 3 (Cryptonote v2 / Masari) */
 "cnAlgorithm": "cryptonight",
-
-/* Set Cryptonight variant. Set 0 for original Cryptonight algorithm and 1 for Cryptonight v1 / Monero v7 algorithm. If empty will use automatic detection. Set -1 to disable. */
-"cnVariant": null,
+"cnVariant": 1,
+"cnBlobType": 0,
 
 /* Logging */
 "logging": {
@@ -250,6 +260,12 @@ Explanation for each field:
             "desc": "Cloud-mining / NiceHash"
         },
         {
+            "port": 8888,
+            "difficulty": 25000,
+            "desc": "Hidden port",
+            "hidden": true // Hide this port in the front-end
+        },
+        {
             "port": 9999,
             "difficulty": 20000,
             "desc": "SSL connection",
@@ -268,16 +284,16 @@ Explanation for each field:
         "variancePercent": 30, // Allow time to vary this % from target without retargeting
         "maxJump": 100 // Limit diff percent increase/decrease in a single retargeting
     },
-
-    /* Set payment ID on miner client side by passing <address>.<paymentID> */
-    "paymentId": {
-        "addressSeparator": "." // Character separator between <address> and <paymentID>
-    },
 	
     /* Set difficulty on miner client side by passing <address> param with +<difficulty> postfix */
     "fixedDiff": {
         "enabled": true,
         "separator": "+", // Character separator between <address> and <difficulty>
+    },
+
+    /* Set payment ID on miner client side by passing <address>.<paymentID> */
+    "paymentId": {
+        "addressSeparator": "." // Character separator between <address> and <paymentID>
     },
 
     /* Feature to trust share difficulties from miners which can
@@ -333,8 +349,9 @@ Explanation for each field:
     /* Block depth required for a block to unlocked/mature. Found in daemon source as
        the variable CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW */
     "depth": 60,
-    "poolFee": 1.8, // 1.8% pool fee (2% total fee total including donations)
-    "devDonation": 0.2 // 0.2% donation to send to pool dev
+    "poolFee": 0.8, // 0.8% pool fee (1% total fee total including donations)
+    "devDonation": 0.2, // 0.2% donation to send to pool dev
+    "networkFee": 0.0 // Network/Governance fee (used by some coins like Loki)
 },
 
 /* AJAX API used for front-end website. */
@@ -367,7 +384,7 @@ Explanation for each field:
     "port": 18982
 },
 
-/* Redis connection into (default port is 6379) */
+/* Redis connection info (default port is 6379) */
 "redis": {
     "host": "127.0.0.1",
     "port": 6379,
@@ -376,14 +393,43 @@ Explanation for each field:
     "cleanupInterval": 15 // Set the REDIS database cleanup interval (in days)
 }
 
+/* Pool Notifications */
+"notifications": {
+    "emailTemplate": "email_templates/default.txt",
+    "emailSubject": {
+        "emailAdded": "Your email was registered",
+        "workerConnected": "Worker %WORKER_NAME% connected",
+        "workerTimeout": "Worker %WORKER_NAME% stopped hashing",
+        "workerBanned": "Worker %WORKER_NAME% banned",
+        "blockFound": "Block %HEIGHT% found !",
+        "blockUnlocked": "Block %HEIGHT% unlocked !",
+        "blockOrphaned": "Block %HEIGHT% orphaned !",
+        "payment": "We sent you a payment !"
+    },
+    "emailMessage": {
+        "emailAdded": "Your email has been registered to receive pool notifications.",
+        "workerConnected": "Your worker %WORKER_NAME% for address %MINER% is now connected from ip %IP%.",
+        "workerTimeout": "Your worker %WORKER_NAME% for address %MINER% has stopped submitting hashes on %LAST_HASH%.",
+        "workerBanned": "Your worker %WORKER_NAME% for address %MINER% has been banned.",
+        "blockFound": "Block found at height %HEIGHT% by miner %MINER% on %TIME%. Waiting maturity.",
+        "blockUnlocked": "Block mined at height %HEIGHT% with %REWARD% and %EFFORT% effort on %TIME%.",
+        "blockOrphaned": "Block orphaned at height %HEIGHT% :(",
+        "payment": "A payment of %AMOUNT% has been sent to %ADDRESS% wallet."
+    },
+    "telegramMessage": {
+        "workerConnected": "Your worker _%WORKER_NAME%_ for address _%MINER%_ is now connected from ip _%IP%_.",
+        "workerTimeout": "Your worker _%WORKER_NAME%_ for address _%MINER%_ has stopped submitting hashes on _%LAST_HASH%_.",
+        "workerBanned": "Your worker _%WORKER_NAME%_ for address _%MINER%_ has been banned.",
+        "blockFound": "*Block found at height* _%HEIGHT%_ *by miner* _%MINER%_*! Waiting maturity.*",
+        "blockUnlocked": "*Block mined at height* _%HEIGHT%_ *with* _%REWARD%_ *and* _%EFFORT%_ *effort on* _%TIME%_*.*",
+        "blockOrphaned": "*Block orphaned at height* _%HEIGHT%_ *:(*",
+        "payment": "A payment of _%AMOUNT%_ has been sent."
+    }
+},
+
 /* Email Notifications */
 "email": {
     "enabled": false,
-    "templateDir": "email_templates", // The templates folder
-    "disableTemplates": ["template_to_disable_1", "template_to_disable_2", "etc"], // Specify which templates you want to disable
-    "variables": { // The variables to replace in templates
-        "POOL_HOST": "poolhost.com" // Your pool domain
-    },
     "fromAddress": "your@email.com", // Your sender email
     "transport": "sendmail", // The transport mode (sendmail, smtp or mailgun)
     
@@ -415,7 +461,7 @@ Explanation for each field:
     }
 },
 
-/* Telegram channel notifications. Currently only send notifications when a block is unlocked.
+/* Telegram channel notifications.
    See Telegram documentation to setup your bot: https://core.telegram.org/bots#3-how-do-i-create-a-bot */
 "telegram": {
     "enabled": false,
@@ -554,8 +600,11 @@ Variable explanations:
 /* Must point to the API setup in your config.json file. */
 var api = "http://poolhost:8117";
 
-/* Pool server host to instruct your miners to point to.  */
+/* Pool server host to instruct your miners to point to (override daemon setting if set) */
 var poolHost = "poolhost.com";
+
+/* Number of coin decimals places (override daemon setting if set) */
+"coinDecimalPlaces": 4,
 
 /* Contact email address. */
 var email = "support@poolhost.com";
@@ -577,9 +626,6 @@ var transactionExplorer = "http://chainradar.com/{symbol}/transaction/{id}";
 
 /* Any custom CSS theme for pool frontend */
 var themeCss = "themes/light.css";
-
-/* Enabled languages list */
-var langs = { 'en': 'English', 'fr': 'Français', 'ca': 'Català' };
 
 /* Default language */
 var defaultLang = 'en';
@@ -610,6 +656,7 @@ By using this you will need to update your `api` variable in the `website_exampl
 ``` javascript
 location ~ ^/api/(.*) {
     proxy_pass http://127.0.0.1:8117/$1$is_args$args;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
 ```
 
@@ -635,6 +682,7 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_cache_bypass $http_upgrade;
     }
 }
@@ -657,7 +705,7 @@ the Node.js modules, and any config files that may have been changed.
 ### JSON-RPC Commands from CLI
 
 Documentation for JSON-RPC commands can be found here:
-* Daemon https://wiki.bytecoin.org/wiki/Daemon_JSON_RPC_API
+* Daemon https://wiki.bytecoin.org/wiki/JSON_RPC_API
 * Wallet https://wiki.bytecoin.org/wiki/Wallet_JSON_RPC_API
 
 
@@ -685,8 +733,11 @@ Thanks for supporting my works on this project! If you want to make a donation t
 * Ethereum (ETH): `0x83ECF65934690D132663F10a2088a550cA201353`
 * Litecoin (LTC): `LS9To9u2C95VPHKauRMEN5BLatC8C1k4F1`
 * Monero (XMR): `49WyMy9Q351C59dT913ieEgqWjaN12dWM5aYqJxSTZCZZj1La5twZtC3DyfUsmVD3tj2Zud7m6kqTVDauRz53FqA9zphHaj`
-* Haven (XHV): `hvxy2RAzE7NfXPLE3AmsuRaZztGDYckCJ14XMoWa6BUqGrGYicLCcjDEjhjGAQaAvHYGgPD7cGUwcYP7nEUs8u6w3uaap9UZTf`
 * Graft (GRFT): `GBqRuitSoU3PFPBAkXMEnLdBRWXH4iDSD6RDxnQiEFjVJhWUi1UuqfV5EzosmaXgpPGE6JJQjMYhZZgWY8EJQn8jQTsuTit`
+* Haven (XHV): `hvxy2RAzE7NfXPLE3AmsuRaZztGDYckCJ14XMoWa6BUqGrGYicLCcjDEjhjGAQaAvHYGgPD7cGUwcYP7nEUs8u6w3uaap9UZTf`
+* IntenseCoin (ITNS): `iz4fRGV8XsRepDtnK8XQDpHc3TbtciQWQ5Z9285qihDkCAvB9VX1yKt6qUCY6sp2TCC252SQLHrjmeLuoXsv4aF42YZtnZQ53`
+* Masari (MSR): `5n7mffxVT9USrq7tcG3TM8HL5yAz7MirUWypXXJfHrNfTcjNtDouLAAGex8s8htu4vBpmMXFzay8KG3jYGMFhYPr2aMbN6i`
+* Stellite (XTL): `Se45GzgpFG3CnvYNwEFnxiRHD2x7YzRnhFLdxjUqXdbv3ysNbfW5U7aUdn87RgMRPM7xwN6CTbXNc7nL5QUgcww11bDeypTe1`
 
 
 Credits

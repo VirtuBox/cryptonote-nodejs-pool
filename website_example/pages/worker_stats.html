@@ -172,7 +172,7 @@ function fetchAddressStats(longpoll){
 	    var payoutEstimate = Math.round(lastReward * (payoutEstimatePct / 100));
             if (transferFee) payoutEstimate = payoutEstimate - transferFee;
 	    if (payoutEstimate < 0) payoutEstimate = 0;
-	    updateText('yourPayoutEstimate', getReadableCoins(payoutEstimate, 4));
+	    updateText('yourPayoutEstimate', getReadableCoins(payoutEstimate));
 	    
             renderPayments(data.payments);
 	    
@@ -281,7 +281,7 @@ function createCharts(data) {
     if (data.hasOwnProperty("charts")) {
         var graphData = {
             hashrate: getGraphData(data.charts.hashrate),
-            payments: getGraphData(data.charts.payments)
+            payments: getGraphData(data.charts.payments, true)
         };
 
         for(var graphType in graphData) {
@@ -305,7 +305,7 @@ function getGraphData(rawData, fixValueToCoins) {
     if(rawData) {
         for (var i = 0, xy; xy = rawData[i]; i++) {
             graphData.names.push(new Date(xy[0]*1000).toLocaleString());
-            graphData.values.push(fixValueToCoins ? getReadableCoins(xy[1], 4, true) : xy[1]);
+            graphData.values.push(fixValueToCoins ? getReadableCoins(xy[1], null, true) : xy[1]);
         }
     }
     
@@ -420,7 +420,7 @@ function getPaymentRowElement(payment, jsonString){
 function getPaymentCells(payment){
     return '<td class="col1">' + formatDate(payment.time) + '</td>' +
            '<td class="col2">' + formatPaymentLink(payment.hash) + '</td>' +
-           '<td class="col3">' + getReadableCoins(payment.amount, 4, false) + '</td>' +
+           '<td class="col3">' + getReadableCoins(payment.amount) + '</td>' +
            '<td class="col4">' + payment.mixin + '</td>';
 }
 
@@ -443,7 +443,7 @@ function getSummaryCells(summary){
     if (summary.count <= 1) text = getTranslation('paymentSummarySingle') ? getTranslation('paymentSummarySingle') : 'On %DATE% you have received %AMOUNT%';
     text = text.replace(/%DATE%/g, summary.date);
     text = text.replace(/%COUNT%/g, summary.count);
-    text = text.replace(/%AMOUNT%/g, getReadableCoins(summary.amount, 4, false));
+    text = text.replace(/%AMOUNT%/g, getReadableCoins(summary.amount));
     return '<td colspan="4">' + text + '</td>';
 }
 
@@ -451,34 +451,22 @@ function getSummaryCells(summary){
 function renderPayments(paymentsResults){
     var $paymentsRows = $('#paymentsReport_rows');
     var lastPaymentDate = null;
-    var summaryData = { date: null, count: 0, amount: 0 };
+    var summaryData = { date: null, time: null, count: 0, amount: 0 };
     for (var i = 0; i < paymentsResults.length; i += 2){
         var payment = parsePayment(paymentsResults[i + 1], paymentsResults[i]);
         var paymentJson = JSON.stringify(payment);
-        var existingRow = document.getElementById('paymentRow' + payment.time);
-        var paymentDate = new Date(parseInt(payment.time) * 1000).toLocaleDateString();
+        var paymentElement = getPaymentRowElement(payment, paymentJson);
 
-        if (lastPaymentDate && paymentDate != lastPaymentDate) {
-            var summaryJson = JSON.stringify(summaryData);
-	    if (summaryData.count > 0) {
-                var existingSummary = document.getElementById('summaryRow' + summaryData.date);
-                if (existingSummary && existingSummary.getAttribute('data-json') !== summaryJson){
-                    $(existingSummary).replaceWith(getSummaryRowElement(summary, summaryJson));
-                }
-                else if (!existingSummary){
-                    var summaryElement = getSummaryRowElement(summaryData, summaryJson);
-                    $paymentsRows.append(summaryElement);
-                }
-	    }
-            summaryData = { date: null, count: 0, amount: 0 };
+        var paymentDate = new Date(parseInt(payment.time) * 1000).toLocaleDateString();
+        if (!lastPaymentDate || lastPaymentDate && paymentDate != lastPaymentDate) {
+            summaryData = { date: paymentDate, time: payment.time, count: 0, amount: 0 };
         }
 
+        var existingRow = document.getElementById('paymentRow' + payment.time);
         if (existingRow && existingRow.getAttribute('data-json') !== paymentJson){
             $(existingRow).replaceWith(getPaymentRowElement(payment, paymentJson));
         }
         else if (!existingRow){
-            var paymentElement = getPaymentRowElement(payment, paymentJson);
-
             var inserted = false;
             var rows = $paymentsRows.children().get();
             for (var f = 0; f < rows.length; f++) {
@@ -494,9 +482,31 @@ function renderPayments(paymentsResults){
             }
         }
     
-        summaryData.date = paymentDate;
         summaryData.count ++;
         summaryData.amount += parseInt(payment.amount);
+	
+        var summaryJson = JSON.stringify(summaryData);
+        var summaryElement = getSummaryRowElement(summaryData, summaryJson);
+
+        var existingSummary = document.getElementById('summaryRow' + summaryData.date);
+        if (existingSummary && existingSummary.getAttribute('data-json') !== summaryJson){
+            $(existingSummary).replaceWith(summaryElement);
+        }
+        else if (!existingSummary){
+            var inserted = false;
+            var rows = $paymentsRows.children().get();
+            for (var f = 0; f < rows.length; f++) {
+                var pTime = parseInt(rows[f].getAttribute('data-time'));
+                if (pTime && pTime === summaryData.time){
+                    inserted = true;
+                    $(rows[f]).before(summaryElement);
+                    break;
+                }
+            }
+            if (!inserted) {
+                $paymentsRows.append(summaryElement);
+            }
+        }
         lastPaymentDate = paymentDate;
     }
 }
