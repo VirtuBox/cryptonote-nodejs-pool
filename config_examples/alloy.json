@@ -1,15 +1,15 @@
 {
     "poolHost": "your.pool.host",
 
-    "coin": "superior",
-    "symbol": "SUP",
-    "coinUnits": 100000000,
+    "coin": "alloy",
+    "symbol": "XAO",
+    "coinUnits": 1000000000000,
     "coinDecimalPlaces": 4,
-    "coinDifficultyTarget": 120,
+    "coinDifficultyTarget": 180,
 
     "cnAlgorithm": "cryptonight",
     "cnVariant": 1,
-    "cnBlobType": 0,
+    "cnBlobType": 2,
 
     "logging": {
         "files": {
@@ -109,12 +109,12 @@
         "maxAddresses": 50,
         "mixin": 5,
         "priority": 0,
-        "transferFee": 50000000,
+        "transferFee": 10000000000,
         "dynamicTransferFee": true,
         "minerPayFee" : true,
-        "minPayment": 1000000000,
+        "minPayment": 1000000000000,
         "maxTransactionAmount": 0,
-        "denomination": 100000000
+        "denomination": 100000000000
     },
 
     "blockUnlocker": {
@@ -145,12 +145,12 @@
 
     "daemon": {
         "host": "127.0.0.1",
-        "port": 16035
+        "port": 1811
     },
 
     "wallet": {
         "host": "127.0.0.1",
-        "port": 16036
+        "port": 1812
     },
 
     "redis": {
@@ -247,10 +247,10 @@
     },
 
     "prices": {
-        "source": "cryptonator",
+        "source": "tradeogre",
         "currency": "USD"
     },
-
+    
     "charts": {
         "pool": {
             "hashrate": {

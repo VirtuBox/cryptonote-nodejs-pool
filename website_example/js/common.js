@@ -199,11 +199,15 @@ function getReadableTime(seconds){
 
 // Get readable hashrate
 function getReadableHashRateString(hashrate){
+    if (!hashrate) hashrate = 0;
+
     var i = 0;
     var byteUnits = [' H', ' KH', ' MH', ' GH', ' TH', ' PH' ];
-    while (hashrate > 1000){
-        hashrate = hashrate / 1000;
-        i++;
+    if (hashrate > 0) {
+        while (hashrate > 1000){
+            hashrate = hashrate / 1000;
+            i++;
+        }
     }
     return hashrate.toFixed(2) + byteUnits[i];
 }
@@ -218,8 +222,8 @@ function getCoinDecimalPlaces() {
 // Get readable coins
 function getReadableCoins(coins, digits, withoutSymbol){
     var coinDecimalPlaces = getCoinDecimalPlaces();
-    var amount = (parseInt(coins || 0) / lastStats.config.coinUnits).toFixed(digits || coinDecimalPlaces);
-    return amount + (withoutSymbol ? '' : (' ' + lastStats.config.symbol));
+    var amount = parseFloat((parseInt(coins || 0) / lastStats.config.coinUnits).toFixed(digits || coinDecimalPlaces));
+    return amount.toString() + (withoutSymbol ? '' : (' ' + lastStats.config.symbol));
 }
 
 // Format payment link
@@ -280,12 +284,12 @@ function getPoolHost() {
 
 // Return transaction URL
 function getTransactionUrl(id) {
-    return transactionExplorer.replace('{symbol}', lastStats.config.symbol.toLowerCase()).replace('{id}', id);
+    return transactionExplorer.replace(new RegExp('{symbol}', 'g'), lastStats.config.symbol.toLowerCase()).replace(new RegExp('{id}', 'g'), id);
 }
 
 // Return blockchain explorer URL
 function getBlockchainUrl(id) {
-    return blockchainExplorer.replace('{symbol}', lastStats.config.symbol.toLowerCase()).replace('{id}', id);    
+    return blockchainExplorer.replace(new RegExp('{symbol}', 'g'), lastStats.config.symbol.toLowerCase()).replace(new RegExp('{id}', 'g'), id);    
 }
  
 /**

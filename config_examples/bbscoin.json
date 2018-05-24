@@ -1,8 +1,8 @@
 {
     "poolHost": "your.pool.host",
 
-    "coin": "superior",
-    "symbol": "SUP",
+    "coin": "bbscoin",
+    "symbol": "BBS",
     "coinUnits": 100000000,
     "coinDecimalPlaces": 4,
     "coinDifficultyTarget": 120,
@@ -109,10 +109,10 @@
         "maxAddresses": 50,
         "mixin": 5,
         "priority": 0,
-        "transferFee": 50000000,
+        "transferFee": 10000000000,
         "dynamicTransferFee": true,
         "minerPayFee" : true,
-        "minPayment": 1000000000,
+        "minPayment": 500000000000,
         "maxTransactionAmount": 0,
         "denomination": 100000000
     },
@@ -145,12 +145,12 @@
 
     "daemon": {
         "host": "127.0.0.1",
-        "port": 16035
+        "port": 21204
     },
 
     "wallet": {
         "host": "127.0.0.1",
-        "port": 16036
+        "port": 21205
     },
 
     "redis": {
@@ -247,10 +247,10 @@
     },
 
     "prices": {
-        "source": "cryptonator",
+        "source": "tradeogre",
         "currency": "USD"
     },
-
+    
     "charts": {
         "pool": {
             "hashrate": {

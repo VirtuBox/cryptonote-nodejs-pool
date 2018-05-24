@@ -5,6 +5,7 @@
     "yourStats": "Estadísticas personales",
     "poolBlocks": "Bloques de la Pool",
     "settings": "Ajustes",
+    "faq": "FAQ",
     "telegram": "Grupo de Telegram",
     "discord": "Discord",
     "contactUs": "Contacto",
@@ -49,6 +50,7 @@
     "difficulty": "Dificultad",
     "blockHash": "Bloque Hash",
     "effort": "Esfuerzo",    
+    "blocksFoundLast24": "Blocks found in the last 24 hours",
 
     "payments": "Pagos",
     "paymentsHistory": "Historial de pagos",

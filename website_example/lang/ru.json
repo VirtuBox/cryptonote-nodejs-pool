@@ -5,6 +5,7 @@
     "yourStats": "Статистика",
     "poolBlocks": "Блоки пула",
     "settings": "Настройки",
+    "faq": "FAQ",
     "telegram": "Группа Telegram",
     "discord": "Discord",
     "contactUs": "Почта",
@@ -48,6 +49,7 @@
     "difficulty": "Сложность",
     "blockHash": "Хеш блока",
     "effort": "Усилие",    
+    "blocksFoundLast24": "Blocks found in the last 24 hours",
 
     "payments": "Платежи",
     "paymentsHistory": "История платежей",

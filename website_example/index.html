@@ -8,7 +8,7 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.6.3/jquery.timeago.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -59,6 +59,10 @@
                     <i class="fa fa-gears"></i> <span tkey="settings">Settings</span>
                 </a></li>
 
+                <li><a class="hot_link" data-page="faq.html" href="#faq">
+                    <i class="fa fa-comments"></i> <span tkey="faq">FAQ</span>
+                </a></li>
+
             </ul>
         </div>
 	
@@ -92,6 +96,7 @@
 
 <!-- Javascript -->
 <script src="config.js"></script>
+<script src="lang/languages.js"></script>
 <script src="js/common.js"></script>
 <script src="js/custom.js"></script>
 <script>
@@ -146,7 +151,7 @@ function loadLiveStats(reload) {
     var apiURL = api + '/stats';
     
     var address = getCurrentAddress();
-    if (address) { apiURL = apiURL + '?address=' + address; }
+    if (address) { apiURL = apiURL + '?address=' + encodeURIComponent(address); }
 
     if (xhrLiveStats) xhrLiveStats.abort();
     
@@ -162,7 +167,7 @@ function fetchLiveStats() {
     var apiURL = api + '/live_stats';
 
     var address = getCurrentAddress();
-    if (address) { apiURL = apiURL + '?address=' + address; }
+    if (address) { apiURL = apiURL + '?address=' + encodeURIComponent(address); }
     
     xhrLiveStats = $.ajax({
         url: apiURL,

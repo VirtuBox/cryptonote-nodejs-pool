@@ -31,6 +31,7 @@ Features
 * TCP (stratum-like) protocol for server-push based jobs
   * Compared to old HTTP protocol, this has a higher hash rate, lower network/CPU server load, lower orphan
     block percent, and less error prone
+* Support for Cryptonight (Original, Monero v7, Stellite v7), Cryptonight Light (Original, Aeon v7, IPBC) and Cryptonight Heavy (Sumokoin) algorithms.
 * IP banning to prevent low-diff share attacks
 * Socket flooding detection
 * Share trust algorithm to reduce share validation hashing CPU load
@@ -42,7 +43,7 @@ Features
 * Set fixed difficulty on miner client by passing "address" param with "+[difficulty]" postfix
 * Modular components for horizontal scaling (pool server, database, stats/API, payment processing, front-end)
 * SSL support for both pool and API servers
-* Support for Cryptonight (Original, Monero v7, Stellite v7), Cryptonight Light (Original, Aeon v7, IPBC) and Cryptonight Heavy (Sumokoin) algorithms.
+* RBPPS (PROP) payment system
 
 #### Live statistics API
 * Currency network/block difficulty
@@ -95,6 +96,7 @@ Community / Support
 
 * [GitHub Wiki](https://github.com/dvandal/cryptonote-nodejs-pool/wiki)
 * [GitHub Issues](https://github.com/dvandal/cryptonote-nodejs-pool/issues)
+* [Telegram Group](http://t.me/CryptonotePool)
 
 #### Pools Using This Software
 
@@ -351,7 +353,11 @@ Explanation for each field:
     "depth": 60,
     "poolFee": 0.8, // 0.8% pool fee (1% total fee total including donations)
     "devDonation": 0.2, // 0.2% donation to send to pool dev
-    "networkFee": 0.0 // Network/Governance fee (used by some coins like Loki)
+    "networkFee": 0.0, // Network/Governance fee (used by some coins like Loki)
+    
+    /* Some forknote coins have an issue with block height in RPC request, to fix you can enable this option.
+       See: https://github.com/forknote/forknote-pool/issues/48 */
+    "fixBlockHeightRPC": false
 },
 
 /* AJAX API used for front-end website. */
@@ -465,6 +471,7 @@ Explanation for each field:
    See Telegram documentation to setup your bot: https://core.telegram.org/bots#3-how-do-i-create-a-bot */
 "telegram": {
     "enabled": false,
+    "botName": "", // The bot user name.
     "token": "", // The bot unique authorization token
     "channel": "", // The telegram channel id (ex: BlockHashMining)
     "channelStats": {
@@ -492,7 +499,7 @@ Explanation for each field:
 
 /* Prices settings for market and price charts */
 "prices": {
-    "source": "cryptonator", // Price source (cryptonator or tradeogre)
+    "source": "cryptonator", // Exchange (supported values: cryptonator, altex, crex24, cryptopia, stocks.exchange, tradeogre)
     "currency": "USD" // Default currency
 },
 	    
@@ -720,7 +727,7 @@ curl 127.0.0.1:18081/json_rpc -d '{"method":"getblockheaderbyheight","params":{"
 
 * To inspect and make changes to redis I suggest using [redis-commander](https://github.com/joeferner/redis-commander)
 * To monitor server load for CPU, Network, IO, etc - I suggest using [New Relic](http://newrelic.com/)
-* To keep your pool node script running in background, logging to file, and automatically restarting if it crashes - I suggest using [forever](https://github.com/nodejitsu/forever)
+* To keep your pool node script running in background, logging to file, and automatically restarting if it crashes - I suggest using [forever](https://github.com/nodejitsu/forever) or [PM2](https://github.com/Unitech/pm2)
 
 
 Donations
